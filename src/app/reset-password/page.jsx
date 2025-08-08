@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -49,7 +49,8 @@ export default function ResetPasswordConfirmationForm() {
   const [showConfirm, setShowConfirm] = useState(false);
   const [validating, setValidating] = useState(true);
   const [validateMsg, setValidateMsg] = useState("");
-  const  [error,setError]=useState("")
+  const  [error,setError]=useState("");
+  const isFirst=useRef(true)
   const searchParams = useSearchParams();
   const onSubmit = async (data) => {
     const userId=searchParams.get("userid")
@@ -61,30 +62,35 @@ export default function ResetPasswordConfirmationForm() {
       }))
       setError("")
     } catch (error) {
-      console.log(error)
+      console.log(error?.response?.data?.message)
       setError(error?.response?.data?.message)
     }
   };
   useEffect(() => {
-    (async () => {
-      try {
-        const token = searchParams.get("token");
-        if (!token) return;
+    if(isFirst.current)
+    {
 
-        console.log(token);
-        await axios.post(
-          `/api/users/verifyforgotpasswordtoken`,
-          JSON.stringify({
-            token,
-          })
-        );
-        setValidateMsg("");
-      } catch (error) {
-        setValidateMsg(error?.response?.data?.message || "Unexpected error");
-      } finally {
-        setValidating(false);
-      }
-    })();
+      (async () => {
+        try {
+          const token = searchParams.get("token");
+          if (!token) return;
+  
+          console.log(token);
+          await axios.post(
+            `/api/users/verifyforgotpasswordtoken`,
+            JSON.stringify({
+              token,
+            })
+          );
+          setValidateMsg("");
+        } catch (error) {
+          setValidateMsg(error?.response?.data?.message || "Unexpected error");
+        } finally {
+          setValidating(false);
+        }
+      })();
+    }
+    isFirst.current=false
   }, []);
   return (
     <section className="min-h-screen flex items-center justify-center bg-gradient-to-b from-indigo-50 via-white to-pink-50 px-4">

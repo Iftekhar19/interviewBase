@@ -29,8 +29,12 @@ const addQuestionSchema=new mongoose.Schema({
         default:null
         
     },
-    timestamps: { createdAt: true, updatedAt: true }
+    userId:{
+        type:mongoose.Types.ObjectId,
+        required:[true,"userId is required"]
+    },
+    // timestamps: { createdAt: true, updatedAt: true }
 
 })
-const Questions=mongoose.models.questions|| mongoose.model("questions",addQuestionSchema)
-export default Questions;
+const Question=mongoose.models.Question|| mongoose.model("Question",addQuestionSchema)
+export default Question;

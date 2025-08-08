@@ -1,7 +1,7 @@
 
-import { NextRequest,NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 
-export async function GET(req,res){
+export async function GET(req){
     try {
 
         let response=NextResponse.json({message:"logout successfully",success:true})

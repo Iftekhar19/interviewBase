@@ -38,6 +38,10 @@ export function AuthProvider({ children }) {
       }
     }
     fetchUser();
+//     setTimeout(()=>
+//     {
+//  setLoading(false)
+//     },2000)
   }, []);
 
   // Loading state (show a loading spinner, skeleton, etc., if you like)

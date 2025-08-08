@@ -1,15 +1,15 @@
 import * as z from "zod";
 const AddQuestion = z.object({
-  title: z.string("title is required").nonempty("title is required"),
+  title: z.string("Title is required").nonempty("Title is required"),
   askedIn: z
-    .string({ required_error: "askinIn is required" })
-    .nonempty("askinIn is required"),
-  subject: z.string("subject is required").nonempty("subject is required"),
-  for: z.string("for is required").nonempty("for is required"),
+    .string("Company is required")
+    .nonempty("Company is required"),
+  subject: z.string("Subject is required").nonempty("Subject is required"),
+  for: z.string("Experience level is required").nonempty("Experience level is required"),
   description: z
-    .string("description is required")
-    .nonempty("description is required"),
-  level: z.string("level is required").nonempty("level is required"),
+    .string("Description is required")
+    .optional(),
+  level: z.string("Difficulty level is required").nonempty("Difficulty level is required"),
 });
 
-export { AddQuestion };
+export { AddQuestion as AddQuestionSchema };

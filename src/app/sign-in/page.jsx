@@ -57,6 +57,7 @@ export default function SignInForm() {
         })
       )
       router.replace('/')
+      window?.location?.reload();
     } catch (error) {
       console.log(error?.response?.data?.message||"Unexpected errors")
       setApiError({
