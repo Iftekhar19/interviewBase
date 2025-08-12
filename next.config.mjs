@@ -5,10 +5,8 @@ const nextConfig = {
   },
    images: {
     domains: [
-      "upload.wikimedia.org",
-  "seeklogo.com",
-  "icons8.com",
-  "www.berkshirehathaway.com"
+ 
+  'https://ik.imagekit.io',"ik.imagekit.io"
     ],
   },
 };

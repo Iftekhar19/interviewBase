@@ -6,7 +6,7 @@ import { Card } from '@/components/ui/card'
 
 export default function TableSkeleton() {
   return (
-    <div className="p-4 ">
+    <div className=" p-2 sm:p-4 ">
 
       {/* Table Skeleton */}
       <Card className="rounded-lg overflow-hidden border">

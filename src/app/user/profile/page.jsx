@@ -1,14 +1,19 @@
 "use client";
 
+import Profileskeleton from "@/components/Profileskeleton";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { useAuth } from "@/context/AuthProvider";
-import { Atom, Braces, BrainCircuit, Code2, Database, ImagePlus, Pencil, Save, ShieldCheck, LogOut } from "lucide-react";
+import { Progress } from "@/components/ui/progress"
+// import { useAuth } from "@/context/AuthProvider";
+import { Authenticator } from "@/utility/Authenticator";
+import { ImageKitAbortError, ImageKitInvalidRequestError, ImageKitServerError, ImageKitUploadNetworkError, upload } from "@imagekit/next";
+import axios from "axios";
+import { Atom, Braces, BrainCircuit, Code2, Database, ImagePlus, Pencil, Save, ShieldCheck, LogOut, Loader2 } from "lucide-react";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export default function ProfilePage() {
-  const {user}=useAuth();
+  // const {user}=useAuth();
   const [form, setForm] = useState({
     username: "john_doe",
     email: "john@example.com",
@@ -16,8 +21,18 @@ export default function ProfilePage() {
     isVerified: true,
     profileImage: "/profile_male.png",
   });
+  const [user,setUser]=useState({})
   const [selectedImage, setSelectedImage] = useState(null);
-
+  const fileInputRef=useRef(null)
+    const abortController = new AbortController();
+     const [progress, setProgress] = useState({
+      isUploading:false,
+      value:0
+     });
+     const [apirError,setApiError]=useState(null)
+     const [toggle,settoggle]=useState(true)
+    
+     const [loading,setLoading]=useState(true)
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -25,22 +40,133 @@ export default function ProfilePage() {
     setSelectedImage(imageUrl);
   };
 
-  const handleSaveImage = () => {
-    setForm(prev => ({ ...prev, profileImage: selectedImage }));
-    setSelectedImage(null);
+
+  
+   const handleUpload = async () => {
+    const fileInput = fileInputRef.current;
+    if (!fileInput || !fileInput.files || fileInput.files.length === 0) {
+      alert("Please select a file to upload");
+      return;
+    }
+    setApiError("")
+
+    const file = fileInput.files[0];
+
+    let authParams;
+    try {
+      authParams = await Authenticator();
+    } catch (authError) {
+      console.error("Failed to authenticate for upload:", authError);
+      setApiError("Failed to authenticate for upload:")
+      return;
+    }
+
+    const { signature, expire, token, publicKey } = authParams;
+
+    try {
+      setProgress({
+        isUploading:true,
+        value:0
+      })
+      const uploadResponse = await upload({
+        expire,
+        token,
+        signature,
+        publicKey,
+        file,
+        fileName: file.name,
+        onProgress: (event) => {
+          // setProgress((event.loaded / event.total) * 100);
+          setProgress({
+        isUploading:true,
+        value:((event.loaded / event.total) * 100)
+      })
+        },
+        abortSignal: abortController.signal,
+      });
+      console.log("Upload response:", uploadResponse);
+      await axios.patch('/api/users/update-me',{
+        profilePicture:uploadResponse.url
+      })
+      setSelectedImage(null)
+      settoggle(!toggle)
+      setApiError("")
+    } catch (error) {
+      if (error instanceof ImageKitAbortError) {
+        console.log("Upload aborted:", error.reason);
+        setApiError(error.reason)
+      } else if (error instanceof ImageKitInvalidRequestError) {
+        console.log("Invalid request:", error.message);
+           setApiError(error.message)
+      } else if (error instanceof ImageKitUploadNetworkError) {
+        console.log("Network error:", error.message);
+           setApiError(error.message)
+      } else if (error instanceof ImageKitServerError) {
+        console.log("Server error:", error.message);
+           setApiError(error.message)
+      } else {
+        console.log("Upload error:", error);
+           setApiError(error.message||"Unable to upload")
+      }
+    }
+    finally{
+       setProgress({
+        isUploading:false,
+        value:0
+      })
+      
+    }
   };
+  const hanldeLogout=async ()=>
+{
+  try {
+    await axios.get('/api/users/logout');
+    window.location.reload();
+  } catch (error) {
+    console.log(error?.response?.data?.message||"Unable to log out")
+  }
+}
+
+  useEffect(()=>
+  {
+   
+
+      (async()=>
+      {
+      try {
+        const res=await axios.get('/api/users/me')
+        const {message}=res.data
+        setUser({
+          ...message
+        })
+        console.log(message)
+      } catch (error) {
+        console.log(error)
+        
+      }
+      finally{
+      
+        setLoading(false)
+      }
+        
+      })()
+    
+
+  },[toggle])
 
   return (
-    <div className="max-w-4xl mx-auto mt-4 px-2 sm:px-4">
+    <>
+    {
+      loading ?<Profileskeleton/>:<div className="max-w-4xl mx-auto mt-2 sm:mt-4 px-2 sm:px-4">
       <Card className="overflow-hidden shadow-lg relative border border-gray-200">
-        <Button className="absolute top-4 right-4 bg-red-700 text-white hover:text-red-700 cursor-pointer" variant="outline" size="sm">
+        <Button onClick={hanldeLogout} className="absolute top-4 right-4 bg-red-700 text-white hover:text-red-700 cursor-pointer" variant="outline" size="sm">
           <LogOut className="w-4 h-4 mr-1" /> Log Out
         </Button>
 
         <CardHeader className="flex flex-col items-center gap-4 pt-6">
           <div className="relative w-28 h-28 rounded-full overflow-hidden border-4 border-indigo-100 shadow-md">
             <Image
-              src={selectedImage || form.profileImage}
+              src={selectedImage||user.profilePicture||"/profile_male.png"}
               alt="Profile"
               fill
               className="object-cover rounded-full"
@@ -58,9 +184,19 @@ export default function ProfilePage() {
               accept="image/*"
               onChange={handleImageChange}
               className="hidden"
+              ref={fileInputRef}
             />
+            {
+              progress.isUploading && <div className="flex flex-col justify-center items-center">
+                <Loader2 className="h-8 w-8 animate-spin"/>
+                <Progress className={'w-[300px]'} value={progress.value}/>
+              </div>
+            }
+            {
+              apirError && <p className="text-red-700 text-sm font-semibold">{apirError}</p>
+            }
             {selectedImage && (
-              <Button onClick={handleSaveImage} className="text-sm" size="sm">
+              <Button onClick={handleUpload} className="text-sm" size="sm">
                 <Save className="w-4 h-4 mr-2" /> Save Image
               </Button>
             )}
@@ -119,5 +255,8 @@ export default function ProfilePage() {
         </CardContent>
       </Card>
     </div>
+    }
+    
+    </>
   );
 }

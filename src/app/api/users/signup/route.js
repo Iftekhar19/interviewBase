@@ -75,6 +75,7 @@ export async function POST(request) {   // <-- FIXED signature
         email,
         emailType: "VERIFY",
         userId: savedUser._id,
+        req:request
       });
 
       return NextResponse.json(

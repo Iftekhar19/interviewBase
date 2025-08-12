@@ -138,7 +138,7 @@ export default function TopicQuestionsPage() {
   }, [topic, rowsPerPage, currentPage,deleteToggle]);
 
   return (
-    <div className="h-full w-full p-4">
+    <div className="h-full w-full  p-2 sm:p-4">
       <h1 className="text-xl font-bold capitalize text-black mb-4">
         {topic} Questions
       </h1>

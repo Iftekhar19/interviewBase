@@ -21,14 +21,14 @@ export async function middleware(request) {
  
 // See "Matching Paths" below to learn more
 export const config = {
-  matcher: [
-    
+ matcher: [
     "/sign-in",
-    '/sign-up',
-    '/profile',
-    '/verifyEmail',
-    '/resetPass',
-    '/resetPassLink',
-    '/dashboard'
+    "/sign-up",
+    "/profile",
+    "/verifyEmail",
+    "/resetPass",
+    "/resetPassLink",
+    "/dashboard/:path*",
+    "/user/:path*"
   ],
 }

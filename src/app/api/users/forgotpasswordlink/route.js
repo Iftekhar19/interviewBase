@@ -26,6 +26,7 @@ export async function POST(req) {
       email:user.email,
       emailType: "RESET PASSWORD",
       userId: user._id,
+      req:req
     });
     return NextResponse.json(
       {

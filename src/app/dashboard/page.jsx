@@ -1,5 +1,6 @@
 "use client";
 
+import AnswerModal from "@/components/AnswerModal";
 import FilterDesk from "@/components/FilterDesk";
 import FilterMob from "@/components/FilterMob";
 import FilterSkeleton from "@/components/FilterSkeleton";
@@ -74,7 +75,10 @@ const page = () => {
     isFirst: true,
     load: true,
   });
-
+  const [open,setOpen]=useState(false)
+  const [title,setTitle]=useState("")
+  const [description,setDescription]=useState("")
+  
   const handleNext = () => {
     if (currentPage < totalPages) setCurrentPage((prev) => prev + 1);
   };
@@ -135,6 +139,13 @@ const page = () => {
       }
     })();
   }, [topic, rowsPerPage, currentPage, level, company, forWhom]);
+
+  const handleOpen=async({title,description})=>
+  {
+    setTitle(title);
+    setDescription(description)
+    setOpen(true)
+  }
   return (
     <div className="w-full ">
       {loading.isFirst ? (
@@ -227,6 +238,7 @@ const page = () => {
                         variant=""
                         className={"cursor-pointer "}
                         size="sm"
+                        onClick={()=>handleOpen({title:item.title,description:item.description})}
                       >
                         <GemIcon className="w-4 h-4" />
                       </Button>
@@ -302,6 +314,12 @@ const page = () => {
           /></>}
         </div>
       )}
+         <AnswerModal
+        isOpen={open}
+        onClose={() => setOpen(false)}
+        title={title}
+        description={description}
+      />
     </div>
   );
 };

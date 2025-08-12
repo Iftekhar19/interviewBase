@@ -25,11 +25,7 @@ import { useState } from "react";
 const sidebarLinks = [
   { href: "/user/profile", icon: UserCircle, label: "Profile" },
   { href: "/user/addquestions", icon: PlusCircle, label: "Add Questions" },
-  {
-    href: "/user/questions?topic=javascript",
-    icon: Code2,
-    label: "Javascript",
-  },
+  { href: "/user/questions?topic=javascript", icon: Code2, label: "Javascript" },
   { href: "/user/questions?topic=reactjs", icon: Atom, label: "React.js" },
   { href: "/user/questions?topic=nodejs", icon: ServerCog, label: "Node.js" },
   { href: "/user/questions?topic=sql", icon: DatabaseZap, label: "SQL" },
@@ -38,14 +34,15 @@ const sidebarLinks = [
 
 const DashboardLayout = ({ children }) => {
   const [collapsed, setCollapsed] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false); // mobile sidebar state
 
   return (
-    <main className="h-screen  w-full   max-w-[1480px] bg-gradient-to-b from-indigo-50 via-white to-pink-50">
+    <main className="h-screen w-full max-w-[1480px] bg-gradient-to-b from-indigo-50 via-white to-pink-50">
       <Navbar />
       <section className="w-full mx-auto h-[calc(100vh-70px)] flex">
         {/* Sidebar */}
         <aside
-          className={`hidden sm:flex flex-col border-r border-gray-200  transition-all duration-300 ${
+          className={`hidden sm:flex flex-col border-r border-gray-200 transition-all duration-300 ${
             collapsed ? "w-[60px]" : "w-[200px]"
           }`}
         >
@@ -56,7 +53,11 @@ const DashboardLayout = ({ children }) => {
               onClick={() => setCollapsed(!collapsed)}
               className="cursor-pointer"
             >
-              {collapsed?<PanelLeftOpen className="w-8 h-8 text-gray-500" />:<PanelLeftClose className="w-8 h-8 text-gray-500" />}
+              {collapsed ? (
+                <PanelLeftOpen className="w-8 h-8 text-gray-500" />
+              ) : (
+                <PanelLeftClose className="w-8 h-8 text-gray-500" />
+              )}
             </Button>
           </div>
           <nav className="flex flex-col gap-1 p-2">
@@ -77,7 +78,7 @@ const DashboardLayout = ({ children }) => {
 
         {/* Mobile Sidebar Sheet */}
         <div className="sm:hidden absolute top-4 left-0 z-50">
-          <Sheet>
+          <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
             <SheetTrigger asChild>
               <Button variant="ghost" size="icon">
                 <Menu className="w-6 h-6" />
@@ -88,7 +89,7 @@ const DashboardLayout = ({ children }) => {
               className="w-[250px] bg-gradient-to-b from-indigo-50 via-white to-pink-50"
             >
               <SheetTitle>
-                <div className="text-lg font-bold  py-5 pl-4 border-b shadow-md border-gray-200  tracking-tight bg-gradient-to-r from-indigo-500 via-sky-400 to-pink-400 bg-clip-text text-transparent">
+                <div className="text-lg font-bold py-5 pl-4 border-b shadow-md border-gray-200 tracking-tight bg-gradient-to-r from-indigo-500 via-sky-400 to-pink-400 bg-clip-text text-transparent">
                   InterviewBase
                 </div>
               </SheetTitle>
@@ -97,6 +98,7 @@ const DashboardLayout = ({ children }) => {
                   <Link
                     key={href}
                     href={href}
+                    onClick={() => setMobileOpen(false)} // CLOSE SHEET ON CLICK
                     className={`flex items-center gap-3 px-4 py-2 rounded-md text-base font-medium hover:bg-indigo-100 ${
                       danger ? "text-red-500" : "text-gray-800"
                     }`}
@@ -111,7 +113,7 @@ const DashboardLayout = ({ children }) => {
         </div>
 
         {/* Main Content */}
-        <div className="flex-1 p-2 overflow-y-auto">{children}</div>
+        <div className="flex-1 p-0 sm:p-2 overflow-y-auto">{children}</div>
       </section>
     </main>
   );

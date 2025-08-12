@@ -40,6 +40,7 @@ const formSchema = z.object({
     .min(5, "Title is required and must be at least 5 characters."),
   askedIn: z.string().min(2, "Company name is required."),
   subject: z.string().min(2, "Subject is required."),
+  // subject: z.string().optional(),
   for: z.string().min(2, "Experience level is required."),
   level: z.string().min(2, "Level is required."),
   description: z.string().optional(),
@@ -77,7 +78,7 @@ export default function AddQuestionForm() {
 
   const onSubmit = async (data) => {
     try {
-      console.log("Submitted Data:", data);
+      // console.log("Submitted Data:", data);
       const updatedobj=getUpdatedValues(oldData,data)
       console.log(updatedobj)
       await axios.patch(`/api/questions/updatequestion/${params.questionId}`,JSON.stringify(updatedobj))
@@ -211,7 +212,7 @@ export default function AddQuestionForm() {
                     <SelectValue placeholder="Select Subject" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="javaScript">
+                    <SelectItem value="javascript">
                       <div className="flex items-center gap-2">
                         <Braces className="w-4 h-4 text-yellow-500" />{" "}
                         JavaScript

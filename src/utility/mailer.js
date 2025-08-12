@@ -4,8 +4,14 @@ import bcryptjs from "bcryptjs"
 import { dbConnect } from "./dbConnect";
 import emailjs from "@emailjs/nodejs"
 
-export const sendMail=async ({email,emailType,userId})=>
+export const sendMail=async ({email,emailType,userId,req})=>
 {
+const host = req?.headers?.host || req?.headers?.['x-forwarded-host'];
+const protocol = req?.headers?.['x-forwarded-proto'] || 'http';
+const baseUrl = `${protocol}://${host}`;
+
+
+
     try {
       await dbConnect();
       // var transport = nodemailer.createTransport({
@@ -67,7 +73,7 @@ export const sendMail=async ({email,emailType,userId})=>
           if(emailType=="VERIFY")
           {
             // const link=`${window.location.protocol}//${window.location.host}/verify-account?token=${hashedVerifyToken}`
-            const link=`${process.env.DOMAIN}/verify-account?token=${hashedVerifyToken}`
+            const link=`${baseUrl.includes('undefined')?process.env.DOMAIN:baseUrl}/verify-account?token=${hashedVerifyToken}`
             info=await emailjs.send(process.env.EMAILJS_SERVICE_ID,process.env.EMAILJS_VA_TEMPLATE_ID,{
               email:email,
               link:link
@@ -76,7 +82,7 @@ export const sendMail=async ({email,emailType,userId})=>
           if(emailType=="RESET PASSWORD")
           {
             // const link=`${window.location.protocol}//${window.location.host}/reset-password?token=${hashedVerifyToken}&userId=${userId}`
-            const link=`${process.env.DOMAIN}/reset-password?token=${hashedVerifyToken}&userid=${userId}`
+            const link=`${baseUrl.includes('undefined')?process.env.DOMAIN:baseUrl}/reset-password?token=${hashedVerifyToken}&userid=${userId}`
             info=await emailjs.send(process.env.EMAILJS_SERVICE_ID,process.env.EMAILJS_FP_TEMPLATE_ID,{
               email:email,
               link:link

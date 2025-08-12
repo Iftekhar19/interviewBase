@@ -65,7 +65,7 @@ export default function AddQuestionForm() {
   });
 
   const onSubmit = async (data) => {
-    console.log("Submitted Data:", data);
+    // console.log("Submitted Data:", data);
     try {
       setApiError({
         isError: false,
