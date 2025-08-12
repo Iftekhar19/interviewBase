@@ -162,12 +162,12 @@ export default function AddQuestionForm() {
                         JavaScript
                       </div>
                     </SelectItem>
-                    <SelectItem value="React">
+                    <SelectItem value="reactjs">
                       <div className="flex items-center gap-2">
                         <Atom className="w-4 h-4 text-sky-500" /> React.js
                       </div>
                     </SelectItem>
-                    <SelectItem value="Node">
+                    <SelectItem value="nodejs">
                       <div className="flex items-center gap-2">
                         <DatabaseZap className="w-4 h-4 text-green-600" />{" "}
                         Node.js

@@ -55,7 +55,7 @@ const hanldeLogout=async ()=>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-48 ">
                   <DropdownMenuItem asChild>
-                    <Link href="/dashboard/topic=javascript" className="flex items-center gap-2 cursor-pointer">
+                    <Link href="/dashboard?topic=javascript" className="flex items-center gap-2 cursor-pointer">
                       <BookOpenText size={16} /> Browse Topics
                     </Link>
                   </DropdownMenuItem>

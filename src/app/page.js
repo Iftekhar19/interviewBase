@@ -13,7 +13,7 @@ export default function Home() {
   console.log(user)
   return <div className="h-[100dvh] flex flex-col">
     <Navbar/>
-    <main className="flex-1 overflow-y-auto bg-gradient-to-b from-indigo-50 via-white to-pink-50">
+    <main className="flex-1 overflow-y-auto bg-gradient-to-b  from-gray-50 via-white to-pink-50">
       <Hero/>
       <Features/>
       <TestimonialsSection/>
