@@ -138,7 +138,7 @@ const Page = () => {
   };
 
   return (
-    <div className="w-full">
+    <div className="w-full h-full ">
       {loading.isFirst ? (
         <FilterSkeleton />
       ) : (
@@ -158,7 +158,7 @@ const Page = () => {
       {loading.load ? (
         <TableSkeleton />
       ) : (
-        <div className="h-full pt-2">
+        <div className="h-auto pt-2">
           {data.length === 0 ? (
             <NoData />
           ) : (

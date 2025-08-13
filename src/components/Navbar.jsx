@@ -59,9 +59,9 @@ export default function Navbar() {
 
         {/* Right Side */}
         {!loading && (
-          <div className="flex items-center gap-2 md:gap-4">
+          <div className="flex items-center gap-1 md:gap-4 cursor-pointer">
             {/* Theme Switch */}
-            <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-gray-100 dark:bg-gray-800">
+            <div className="flex items-center gap-2 px-3 py-2 rounded-full bg-gray-100 dark:bg-gray-800">
               {theme === "light" && <Sun size={16} />}
               {theme === "dark" && <Moon size={16} />}
               {theme === "system" && <Laptop size={16} />}
@@ -75,14 +75,14 @@ export default function Navbar() {
 
             {!user ? (
               <>
-                  <Button variant="outline" className="cursor-pointer">
-                <Link href="/sign-in">
+                <Link href="/sign-in" className="">
+                  <Button variant="outline" className="cursor-pointer p-2">
 
                     Sign In
-                </Link>
                   </Button>
+                </Link>
                 <Link href="/sign-up">
-                  <Button className="cursor-pointer bg-indigo-600 text-white shadow-lg">
+                  <Button className="cursor-pointer bg-indigo-600 text-white shadow-lg p-2">
                     Sign Up
                   </Button>
                 </Link>

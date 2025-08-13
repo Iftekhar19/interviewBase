@@ -30,6 +30,7 @@ const sidebarLinks = [
 
 const DashboardLayout = ({ children }) => {
   const [collapsed, setCollapsed] = useState(false);
+    const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
     <main className="h-screen w-full max-w-[1480px] bg-white dark:bg-gray-900">
@@ -75,10 +76,10 @@ const DashboardLayout = ({ children }) => {
 
         {/* Mobile Sidebar Sheet */}
         <div className="sm:hidden absolute top-4 left-0 z-50">
-          <Sheet>
-            <SheetTrigger asChild>
-              <Button variant="ghost" size="icon" className="hover:bg-gray-100 dark:hover:bg-gray-800">
-                <Menu className="w-6 h-6 text-gray-800 dark:text-gray-200" />
+          <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
+            <SheetTrigger asChild className="">
+              <Button variant="ghost" size="icon" className="hover:bg-gray-100 dark:hover:bg-gray-800 ">
+                <Menu className="w-6 h-6 text-gray-800 dark:text-gray-200 " />
               </Button>
             </SheetTrigger>
             <SheetContent
@@ -95,6 +96,7 @@ const DashboardLayout = ({ children }) => {
                   <Link
                     key={href}
                     href={href}
+                     onClick={() => setMobileOpen(false)}
                     className={`flex items-center gap-3 px-4 py-2 rounded-md text-base font-medium hover:bg-indigo-100 dark:hover:bg-indigo-900/30 ${
                       danger
                         ? "text-red-500 dark:text-red-400"

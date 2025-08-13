@@ -83,7 +83,7 @@ const DashboardLayout = ({ children }) => {
           <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
             <SheetTrigger asChild>
               <Button variant="ghost" size="icon">
-                <Menu className="w-6 h-6 text-gray-800 dark:text-gray-200" />
+                <Menu className="w-6 h-6 text-gray-800 dark:text-gray-200 absolute top-2 left-2" />
               </Button>
             </SheetTrigger>
             <SheetContent
