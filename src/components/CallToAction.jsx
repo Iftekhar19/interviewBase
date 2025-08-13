@@ -32,13 +32,13 @@ export default function CallToActionSection() {
           transition={{ duration: 0.8, delay: 0.4 }}
         >
           <Link
-            href="/ask"
+            href="/user/addquestions"
             className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-indigo-600 text-white shadow-lg font-bold rounded-full hover:opacity-90 transition"
           >
             Post a Question <ArrowRight size={18} />
           </Link>
           <Link
-            href="/categories"
+            href="/dashboard?topic=javascript"
             className="inline-flex items-center justify-center gap-2 px-6 py-3 border border-indigo-600 dark:border-indigo-400 text-indigo-700 dark:text-indigo-300 font-semibold rounded-full hover:bg-indigo-100 dark:hover:bg-indigo-900 transition"
           >
             Browse Questions <ArrowRight size={18} />

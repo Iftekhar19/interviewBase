@@ -1,6 +1,7 @@
 "use client";
 import { motion } from "framer-motion";
 import { Atom, Database, Braces } from "lucide-react";
+import Link from "next/link";
 
 export default function Hero() {
   return (
@@ -64,16 +65,16 @@ export default function Hero() {
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 1, delay: 0.6 }}
         >
-          <a
-            href="/ask"
+          <Link
+            href="/user/addquestions"
             className="px-7 py-3 text-lg font-bold rounded-full 
              bg-indigo-600
               text-white shadow-lg hover:scale-105 active:scale-95 transition-transform"
           >
             Post a Question
-          </a>
-          <a
-            href="/categories"
+          </Link>
+          <Link
+            href="/dashboard?topic=javascript"
             className="px-7 py-3 text-lg font-semibold rounded-full 
               border-2 border-indigo-400 dark:border-indigo-300
               text-indigo-700 dark:text-indigo-300 
@@ -82,7 +83,7 @@ export default function Hero() {
               hover:scale-105 active:scale-95 transition"
           >
             Browse Topics
-          </a>
+          </Link>
         </motion.div>
       </motion.div>
     </section>
