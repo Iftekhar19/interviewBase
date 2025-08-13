@@ -134,7 +134,7 @@ export default function SignInForm() {
             <Button
               disabled={loading}
               type="submit"
-              className="w-full cursor-pointer bg-gradient-to-r from-indigo-500 to-pink-500 text-white font-semibold py-3 rounded-full shadow-lg hover:brightness-110 hover:scale-[1.01] transition-all duration-300"
+              className="w-full cursor-pointer bg-indigo-600 text-white hover:bg-indigo-600 font-semibold py-3 rounded-full shadow-lg hover:brightness-110 hover:scale-[1.01] transition-all duration-300"
             >
               {loading ? <><Loader2 className="h-6 w-5 animate-spin" /> Signing In</> : "Sign In"}
             </Button>

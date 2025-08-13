@@ -105,7 +105,7 @@ const router=useRouter();
   <section className="flex justify-center items-center min-h-[100dvh] bg-gradient-to-b from-indigo-50 via-white to-pink-50 dark:from-gray-900 dark:via-gray-950 dark:to-gray-900 transition-colors duration-300">
   <div className="max-w-md w-full mx-auto p-6 bg-white/60 dark:bg-gray-800/60 backdrop-blur-xl rounded-xl shadow-md border border-gray-200 dark:border-gray-700">
     <div className="flex flex-col gap-1 items-center mb-6">
-      <h2 className="text-2xl font-bold text-center bg-gradient-to-r from-indigo-600 via-pink-500 to-indigo-600 bg-clip-text text-transparent mb-0">
+      <h2 className="text-2xl font-bold text-center text-indigo-500  hover:text-indigo-500 mb-0">
         User Registration
       </h2>
 
@@ -254,7 +254,7 @@ const router=useRouter();
         <Button
           disabled={loading}
           type="submit"
-          className="w-full cursor-pointer bg-gradient-to-r from-indigo-500 to-pink-500 text-white font-semibold py-3 rounded-full shadow-lg hover:brightness-110 hover:scale-[1.01] transition-all duration-300"
+          className="w-full cursor-pointer bg-indigo-600 text-white hover:bg-indigo-600 font-semibold py-3 rounded-full shadow-lg hover:brightness-110 hover:scale-[1.01] transition-all duration-300"
         >
           {loading ? (
             <>

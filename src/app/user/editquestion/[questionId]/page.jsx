@@ -302,7 +302,7 @@ export default function AddQuestionForm() {
             <Button
               type="submit"
               disabled={isSubmitting}
-              className="w-full cursor-pointer bg-gradient-to-r from-indigo-500 to-pink-500 text-white hover:opacity-90"
+              className="w-full cursor-pointer bg-indigo-600 text-white hover:bg-indigo-600 hover:opacity-90"
             >
               {isSubmitting && <Loader2 className="w-4 h-4 animate-spin mr-2" />}
               Submit Question

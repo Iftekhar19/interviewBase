@@ -143,7 +143,7 @@ const FilterDesk = ({ setLevel, setCompany: setCom, setForWhom: setFor }) => {
 
       {/* Buttons */}
       <Button
-        className="cursor-pointer bg-gradient-to-r from-indigo-500 to-pink-500 text-white self-end"
+        className="cursor-pointer bg-indigo-600 text-white self-end"
         onClick={applyFilters}
       >
         Apply

@@ -23,6 +23,7 @@ import { useTheme } from "next-themes";
 import { Switch } from "@/components/ui/switch";
 import axios from "axios";
 import { useState, useEffect } from "react";
+import Image from "next/image";
 
 export default function Navbar() {
   const { user, loading } = useAuth();
@@ -52,12 +53,13 @@ export default function Navbar() {
           href="/"
           className="flex items-center gap-2 text-2xl font-black text-indigo-600 dark:text-indigo-400 tracking-tight"
         >
-          <span>💡</span>InterviewBase
+          <span className="dark:text-white text-indigo-600 p-2 rounded-full md:hidden">IB</span><span className="hidden md:inline-block">InterviewBase</span>
+        
         </Link>
 
         {/* Right Side */}
         {!loading && (
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2 md:gap-4">
             {/* Theme Switch */}
             <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-gray-100 dark:bg-gray-800">
               {theme === "light" && <Sun size={16} />}
@@ -80,7 +82,7 @@ export default function Navbar() {
                 </Link>
                   </Button>
                 <Link href="/sign-up">
-                  <Button className="cursor-pointer bg-gradient-to-r from-indigo-500 to-pink-500 text-white shadow-lg">
+                  <Button className="cursor-pointer bg-indigo-600 text-white shadow-lg">
                     Sign Up
                   </Button>
                 </Link>

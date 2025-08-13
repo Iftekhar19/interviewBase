@@ -65,9 +65,7 @@ export default function VerifyAccountPage() {
               onClick={handleVerify}
               disabled={isVerifying}
               className="w-full cursor-pointer 
-                bg-gradient-to-r from-indigo-500 to-pink-500 
-                dark:from-indigo-400 dark:to-pink-400
-                text-white font-semibold hover:brightness-105"
+               bg-indigo-600 text-white hover:bg-indigo-600 font-semibold hover:brightness-105"
             >
               {isVerifying ? (
                 <span className="flex items-center justify-center gap-2">

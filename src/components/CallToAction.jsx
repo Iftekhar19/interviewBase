@@ -33,7 +33,7 @@ export default function CallToActionSection() {
         >
           <Link
             href="/ask"
-            className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-indigo-500 to-pink-500 text-white shadow-lg font-bold rounded-full hover:opacity-90 transition"
+            className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-indigo-600 text-white shadow-lg font-bold rounded-full hover:opacity-90 transition"
           >
             Post a Question <ArrowRight size={18} />
           </Link>

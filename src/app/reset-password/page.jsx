@@ -100,7 +100,7 @@ export default function ResetPasswordConfirmationForm() {
           transition={{ duration: 0.6 }}
         >
           <div className="mb-6 flex flex-col justify-center items-center gap-1">
-            <h2 className="text-2xl font-extrabold text-center bg-gradient-to-r from-indigo-600 via-pink-500 to-indigo-600 bg-clip-text text-transparent">
+            <h2 className="text-2xl font-extrabold text-center text-indigo-500">
               Set a New Password
             </h2>
             {error && (
@@ -189,7 +189,7 @@ export default function ResetPasswordConfirmationForm() {
 
                 <Button
                   type="submit"
-                  className="w-full bg-gradient-to-r from-indigo-500 to-pink-500 text-white font-semibold hover:brightness-105 dark:hover:brightness-110"
+                  className="w-full bg-indigo-600 text-white hover:bg-indigo-600 font-semibold hover:brightness-105 dark:hover:brightness-110"
                   disabled={isSubmitting}
                 >
                   {isSubmitting ? (

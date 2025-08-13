@@ -58,7 +58,7 @@ export default function ResetPasswordForm() {
         transition={{ duration: 0.6 }}
       >
         <div className="flex flex-col gap-1 mb-6 items-center">
-          <h2 className="text-2xl mb-0 font-extrabold text-center bg-gradient-to-r from-indigo-600 via-pink-500 to-indigo-600 bg-clip-text text-transparent">
+          <h2 className="text-2xl mb-0 font-extrabold text-center text-indigo-500  ">
             Reset Your Password
           </h2>
           <p className="text-center text-gray-400 dark:text-gray-500 font-semibold text-sm">
@@ -95,7 +95,7 @@ export default function ResetPasswordForm() {
             </div>
             <Button
               type="submit"
-              className="w-full bg-gradient-to-r from-indigo-500 to-pink-500 text-white font-semibold hover:brightness-105 dark:hover:brightness-110"
+              className="w-full bg-indigo-600 text-white hover:bg-indigo-600 font-semibold hover:brightness-105 dark:hover:brightness-110"
               disabled={isSubmitting}
             >
               {isSubmitting ? (
@@ -124,7 +124,7 @@ export default function ResetPasswordForm() {
           or{" "}
           <Link
             href="/sign-up"
-            className="text-pink-600 dark:text-pink-400 hover:underline font-medium"
+            className="text-indigo-600 dark:text-indigo-400 hover:underline font-medium"
           >
             Create an account
           </Link>
