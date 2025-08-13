@@ -157,7 +157,7 @@ const FilterMob = ({ setLevel, setCompany: setCom, setForWhom: setFor }) => {
               Reset
             </Button>
             <Button
-              className="cursor-pointer bg-gradient-to-r from-indigo-500 to-pink-500 text-white"
+              className="cursor-pointer bg-indigo-600 text-white"
               onClick={applyFilters}
             >
               Apply
