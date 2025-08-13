@@ -9,27 +9,48 @@ import {
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { User, LogOut, LayoutDashboard, BookOpenText, UserCircle } from "lucide-react";
+import {
+  User,
+  LogOut,
+  LayoutDashboard,
+  BookOpenText,
+  UserCircle,
+  Sun,
+  Moon,
+  Laptop
+} from "lucide-react";
+import { useTheme } from "next-themes";
+import { Switch } from "@/components/ui/switch";
 import axios from "axios";
+import { useState, useEffect } from "react";
 
 export default function Navbar() {
   const { user, loading } = useAuth();
-const hanldeLogout=async ()=>
-{
-  try {
-    await axios.get('/api/users/logout');
-    window.location.reload();
-  } catch (error) {
-    console.log(error?.response?.data?.message||"Unable to log out")
-  }
-}
+  const { theme, setTheme, systemTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const hanldeLogout = async () => {
+    try {
+      await axios.get("/api/users/logout");
+      window.location.reload();
+    } catch (error) {
+      console.log(error?.response?.data?.message || "Unable to log out");
+    }
+  };
+
+  if (!mounted) return null; // Prevent hydration mismatch
+
   return (
-    <header className="w-full backdrop-blur bg-white/80 border-b border-gray-100 shadow-md sticky top-0 z-50 transition-all">
+    <header className="w-full backdrop-blur bg-white dark:bg-gray-950 border-b border-gray-100 dark:border-gray-800 shadow-md sticky top-0 z-50 transition-all">
       <div className="max-w-[1420px] mx-auto px-4 py-4 flex justify-between items-center">
         {/* Logo */}
         <Link
           href="/"
-          className="flex items-center gap-2 text-2xl font-black text-indigo-600 tracking-tight bg-gradient-to-r from-indigo-500 via-sky-400 to-pink-400 bg-clip-text text-transparent"
+          className="flex items-center gap-2 text-2xl font-black text-indigo-600 dark:text-indigo-400 tracking-tight"
         >
           <span>💡</span>InterviewBase
         </Link>
@@ -37,35 +58,66 @@ const hanldeLogout=async ()=>
         {/* Right Side */}
         {!loading && (
           <div className="flex items-center gap-4">
+            {/* Theme Switch */}
+            <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-gray-100 dark:bg-gray-800">
+              {theme === "light" && <Sun size={16} />}
+              {theme === "dark" && <Moon size={16} />}
+              {theme === "system" && <Laptop size={16} />}
+              <Switch
+                checked={theme === "dark"}
+                onCheckedChange={(checked) =>
+                  setTheme(checked ? "dark" : "light")
+                }
+              />
+            </div>
+
             {!user ? (
               <>
-                <Link href="/sign-in" >
-                  <Button variant="outline" className="cursor-pointer">Sign In</Button>
+                  <Button variant="outline" className="cursor-pointer">
+                <Link href="/sign-in">
+
+                    Sign In
                 </Link>
-                <Link href="/sign-up" >
-                  <Button className="cursor-pointer bg-gradient-to-r from-indigo-500 to-pink-500 text-white shadow-lg">Sign Up</Button>
+                  </Button>
+                <Link href="/sign-up">
+                  <Button className="cursor-pointer bg-gradient-to-r from-indigo-500 to-pink-500 text-white shadow-lg">
+                    Sign Up
+                  </Button>
                 </Link>
               </>
             ) : (
-              <DropdownMenu >
+              <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="icon" className={`bg-gray-100 rounded-full cursor-pointer`}>
-                    <User className="w-6 h-6 text-indigo-600" />
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className={`bg-gray-100 dark:bg-gray-800 rounded-full cursor-pointer`}
+                  >
+                    <User className="w-6 h-6 text-indigo-600 dark:text-indigo-400" />
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-48 ">
+                <DropdownMenuContent align="end" className="w-48">
                   <DropdownMenuItem asChild>
-                    <Link href="/dashboard?topic=javascript" className="flex items-center gap-2 cursor-pointer">
+                    <Link
+                      href="/dashboard?topic=javascript"
+                      className="flex items-center gap-2 cursor-pointer"
+                    >
                       <BookOpenText size={16} /> Browse Topics
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
-                    <Link href="/user/addquestions" className="flex items-center gap-2 cursor-pointer">
+                    <Link
+                      href="/user/addquestions"
+                      className="flex items-center gap-2 cursor-pointer"
+                    >
                       <LayoutDashboard size={16} /> Add Questions
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
-                    <Link href="/user/profile" className="flex items-center gap-2 cursor-pointer">
+                    <Link
+                      href="/user/profile"
+                      className="flex items-center gap-2 cursor-pointer"
+                    >
                       <UserCircle size={16} /> Profile
                     </Link>
                   </DropdownMenuItem>

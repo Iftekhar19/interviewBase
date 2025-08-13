@@ -42,45 +42,42 @@ export default function ResetPasswordConfirmationForm() {
   const {
     handleSubmit,
     formState: { isSubmitting, isSubmitSuccessful },
-    reset,
   } = form;
 
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   const [validating, setValidating] = useState(true);
   const [validateMsg, setValidateMsg] = useState("");
-  const  [error,setError]=useState("");
-  const isFirst=useRef(true)
+  const [error, setError] = useState("");
+  const isFirst = useRef(true);
   const searchParams = useSearchParams();
+
   const onSubmit = async (data) => {
-    const userId=searchParams.get("userid")
+    const userId = searchParams.get("userid");
     try {
-      setError("")
-      await axios.post(`/api/users/forgotpassword`,JSON.stringify({
-        password:data.password,
-        userid:userId
-      }))
-      setError("")
+      setError("");
+      await axios.post(
+        `/api/users/forgotpassword`,
+        JSON.stringify({
+          password: data.password,
+          userid: userId,
+        })
+      );
+      setError("");
     } catch (error) {
-      console.log(error?.response?.data?.message)
-      setError(error?.response?.data?.message)
+      setError(error?.response?.data?.message);
     }
   };
-  useEffect(() => {
-    if(isFirst.current)
-    {
 
+  useEffect(() => {
+    if (isFirst.current) {
       (async () => {
         try {
           const token = searchParams.get("token");
           if (!token) return;
-  
-          console.log(token);
           await axios.post(
             `/api/users/verifyforgotpasswordtoken`,
-            JSON.stringify({
-              token,
-            })
+            JSON.stringify({ token })
           );
           setValidateMsg("");
         } catch (error) {
@@ -90,22 +87,25 @@ export default function ResetPasswordConfirmationForm() {
         }
       })();
     }
-    isFirst.current=false
+    isFirst.current = false;
   }, []);
+
   return (
-    <section className="min-h-screen flex items-center justify-center bg-gradient-to-b from-indigo-50 via-white to-pink-50 px-4">
+    <section className="min-h-screen flex items-center justify-center bg-gradient-to-b from-indigo-50 via-white to-pink-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 px-4">
       {validateMsg === "" && !validating ? (
         <motion.div
-          className="w-full max-w-md bg-white p-8 rounded-xl shadow-md border border-indigo-100"
+          className="w-full max-w-md bg-white dark:bg-gray-800 p-8 rounded-xl shadow-md border border-indigo-100 dark:border-gray-700"
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
         >
           <div className="mb-6 flex flex-col justify-center items-center gap-1">
-          <h2 className="text-2xl font-extrabold text-center  bg-gradient-to-r from-indigo-600 via-pink-500 to-indigo-600 bg-clip-text text-transparent">
-            Set a New Password
-          </h2>
-          {error && <p className="text-red-400 text-sm font-semibold">{error}</p>}
+            <h2 className="text-2xl font-extrabold text-center bg-gradient-to-r from-indigo-600 via-pink-500 to-indigo-600 bg-clip-text text-transparent">
+              Set a New Password
+            </h2>
+            {error && (
+              <p className="text-red-400 text-sm font-semibold">{error}</p>
+            )}
           </div>
 
           {!isSubmitSuccessful ? (
@@ -116,7 +116,9 @@ export default function ResetPasswordConfirmationForm() {
                   name="password"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>New Password</FormLabel>
+                      <FormLabel className="text-gray-700 dark:text-gray-200">
+                        New Password
+                      </FormLabel>
                       <FormControl>
                         <div className="relative">
                           <Lock
@@ -126,13 +128,13 @@ export default function ResetPasswordConfirmationForm() {
                           <Input
                             type={showPassword ? "text" : "password"}
                             placeholder="Enter new password"
-                            className="pl-10 pr-10"
+                            className="pl-10 pr-10 bg-gray-50 dark:bg-gray-700 dark:text-white"
                             {...field}
                           />
                           <button
                             type="button"
                             onClick={() => setShowPassword((prev) => !prev)}
-                            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500"
+                            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 dark:text-gray-300"
                           >
                             {showPassword ? (
                               <EyeOff size={18} />
@@ -152,7 +154,9 @@ export default function ResetPasswordConfirmationForm() {
                   name="confirmPassword"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Confirm Password</FormLabel>
+                      <FormLabel className="text-gray-700 dark:text-gray-200">
+                        Confirm Password
+                      </FormLabel>
                       <FormControl>
                         <div className="relative">
                           <Lock
@@ -162,13 +166,13 @@ export default function ResetPasswordConfirmationForm() {
                           <Input
                             type={showConfirm ? "text" : "password"}
                             placeholder="Confirm your password"
-                            className="pl-10 pr-10"
+                            className="pl-10 pr-10 bg-gray-50 dark:bg-gray-700 dark:text-white"
                             {...field}
                           />
                           <button
                             type="button"
                             onClick={() => setShowConfirm((prev) => !prev)}
-                            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500"
+                            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 dark:text-gray-300"
                           >
                             {showConfirm ? (
                               <EyeOff size={18} />
@@ -185,13 +189,12 @@ export default function ResetPasswordConfirmationForm() {
 
                 <Button
                   type="submit"
-                  className="w-full bg-gradient-to-r from-indigo-500 to-pink-500 text-white font-semibold hover:brightness-105"
+                  className="w-full bg-gradient-to-r from-indigo-500 to-pink-500 text-white font-semibold hover:brightness-105 dark:hover:brightness-110"
                   disabled={isSubmitting}
                 >
                   {isSubmitting ? (
                     <span className="flex items-center justify-center gap-2">
-                      <Loader2 className="animate-spin" size={18} />{" "}
-                      Resetting...
+                      <Loader2 className="animate-spin" size={18} /> Resetting...
                     </span>
                   ) : (
                     "Reset Password"
@@ -200,11 +203,11 @@ export default function ResetPasswordConfirmationForm() {
               </form>
             </Form>
           ) : (
-            <div className="text-center text-green-600 font-medium space-y-4">
+            <div className="text-center text-green-600 dark:text-green-400 font-medium space-y-4">
               <p>Your password has been successfully reset.</p>
               <Link
                 href="/sign-in"
-                className="text-indigo-600 hover:underline font-semibold"
+                className="text-indigo-600 dark:text-indigo-400 hover:underline font-semibold"
               >
                 Back to Sign In
               </Link>
@@ -212,25 +215,25 @@ export default function ResetPasswordConfirmationForm() {
           )}
         </motion.div>
       ) : !validating && validateMsg !== "" ? (
-        <div className=" min-h-[200px] w-full max-w-md bg-white p-8 rounded-xl shadow-md border border-indigo-100">
+        <div className="min-h-[200px] w-full max-w-md bg-white dark:bg-gray-800 p-8 rounded-xl shadow-md border border-indigo-100 dark:border-gray-700">
           <div className="flex justify-center flex-col items-center w-full h-full">
             <p className="text-red-500 text-center text-md font-semibold">
-              Sorry ! unable to validate your token please raise another reset
-              passowrd request by forgetting passowrd
+              Sorry! Unable to validate your token. Please raise another reset
+              password request.
             </p>
             <Link
               href="/forgot-password"
-              className="text-indigo-600 hover:underline font-semibold"
+              className="text-indigo-600 dark:text-indigo-400 hover:underline font-semibold"
             >
-              forgot password
+              Forgot password
             </Link>
           </div>
         </div>
       ) : (
-        <div className=" min-h-[200px] w-full max-w-md bg-white p-8 rounded-xl shadow-md border border-indigo-100">
+        <div className="min-h-[200px] w-full max-w-md bg-white dark:bg-gray-800 p-8 rounded-xl shadow-md border border-indigo-100 dark:border-gray-700">
           <div className="flex justify-center flex-col items-center w-full h-full">
-            <Loader2 className="h-12 w-12 animate-spin" />
-            <p className="text-black mt-2 font-bold">
+            <Loader2 className="h-12 w-12 animate-spin text-gray-700 dark:text-gray-200" />
+            <p className="text-black dark:text-white mt-2 font-bold">
               Please wait... we are validating your credentials
             </p>
           </div>

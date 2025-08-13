@@ -32,23 +32,27 @@ const DashboardLayout = ({ children }) => {
   const [collapsed, setCollapsed] = useState(false);
 
   return (
-    <main className="h-screen  w-full   max-w-[1480px] bg-gradient-to-b from-indigo-50 via-white to-pink-50">
+    <main className="h-screen w-full max-w-[1480px] bg-white dark:bg-gray-900">
       <Navbar />
-      <section className="w-full mx-auto h-[calc(100vh-70px)]    flex">
+      <section className="w-full mx-auto h-[calc(100vh-70px)] flex">
         {/* Sidebar */}
         <aside
-          className={`hidden sm:flex flex-col border-r border-gray-200  transition-all duration-300 ${
+          className={`hidden sm:flex flex-col border-r border-gray-200 dark:border-gray-700 transition-all duration-300 ${
             collapsed ? "w-[60px]" : "w-[200px]"
-          }`}
+          } bg-white dark:bg-gray-900`}
         >
           <div className="flex justify-end p-2">
             <Button
               variant="ghost"
               size="icon"
               onClick={() => setCollapsed(!collapsed)}
-              className="cursor-pointer"
+              className="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800"
             >
-             {collapsed?<PanelLeftOpen className="w-8 h-8 text-gray-500" />:<PanelLeftClose className="w-8 h-8 text-gray-500" />}
+              {collapsed ? (
+                <PanelLeftOpen className="w-8 h-8 text-gray-500 dark:text-gray-400" />
+              ) : (
+                <PanelLeftClose className="w-8 h-8 text-gray-500 dark:text-gray-400" />
+              )}
             </Button>
           </div>
           <nav className="flex flex-col gap-1 p-2">
@@ -56,8 +60,10 @@ const DashboardLayout = ({ children }) => {
               <Link
                 key={href}
                 href={href}
-                className={`flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium hover:bg-indigo-50 ${
-                  danger ? "text-red-500" : "text-gray-700"
+                className={`flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium hover:bg-indigo-50 dark:hover:bg-indigo-900/30 ${
+                  danger
+                    ? "text-red-500 dark:text-red-400"
+                    : "text-gray-700 dark:text-gray-200"
                 }`}
               >
                 <Icon className="w-5 h-5" />
@@ -71,13 +77,16 @@ const DashboardLayout = ({ children }) => {
         <div className="sm:hidden absolute top-4 left-0 z-50">
           <Sheet>
             <SheetTrigger asChild>
-              <Button variant="ghost" size="icon">
-                <Menu className="w-6 h-6" />
+              <Button variant="ghost" size="icon" className="hover:bg-gray-100 dark:hover:bg-gray-800">
+                <Menu className="w-6 h-6 text-gray-800 dark:text-gray-200" />
               </Button>
             </SheetTrigger>
-            <SheetContent side="left" className="w-[250px] bg-gradient-to-b from-indigo-50 via-white to-pink-50">
+            <SheetContent
+              side="left"
+              className="w-[250px] bg-gradient-to-b from-indigo-50 via-white to-pink-50 dark:from-gray-900 dark:via-gray-950 dark:to-gray-900"
+            >
               <SheetTitle>
-                <div className="text-lg font-bold text-indigo-600 py-5 pl-4 border-b shadow-md border-gray-200  tracking-tight bg-gradient-to-r from-indigo-500 via-sky-400 to-pink-400 bg-clip-text text-transparent">
+                <div className="text-lg font-bold py-5 pl-4 border-b border-gray-200 dark:border-gray-700 shadow-md tracking-tight bg-gradient-to-r from-indigo-500 via-sky-400 to-pink-400 bg-clip-text text-transparent">
                   InterviewBase
                 </div>
               </SheetTitle>
@@ -86,8 +95,10 @@ const DashboardLayout = ({ children }) => {
                   <Link
                     key={href}
                     href={href}
-                    className={`flex items-center gap-3 px-4 py-2 rounded-md text-base font-medium hover:bg-indigo-100 ${
-                      danger ? "text-red-500" : "text-gray-800"
+                    className={`flex items-center gap-3 px-4 py-2 rounded-md text-base font-medium hover:bg-indigo-100 dark:hover:bg-indigo-900/30 ${
+                      danger
+                        ? "text-red-500 dark:text-red-400"
+                        : "text-gray-800 dark:text-gray-200"
                     }`}
                   >
                     <Icon className="w-5 h-5" />
@@ -100,7 +111,7 @@ const DashboardLayout = ({ children }) => {
         </div>
 
         {/* Main Content */}
-        <div className="flex-1 p-2 overflow-y-auto">{children}</div>
+        <div className="flex-1 p-2 overflow-y-auto bg-white dark:bg-gray-900">{children}</div>
       </section>
     </main>
   );

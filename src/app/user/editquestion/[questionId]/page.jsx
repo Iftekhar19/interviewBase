@@ -35,12 +35,9 @@ import { useForm } from "react-hook-form";
 import * as z from "zod";
 
 const formSchema = z.object({
-  title: z
-    .string()
-    .min(5, "Title is required and must be at least 5 characters."),
+  title: z.string().min(5, "Title is required and must be at least 5 characters."),
   askedIn: z.string().min(2, "Company name is required."),
   subject: z.string().min(2, "Subject is required."),
-  // subject: z.string().optional(),
   for: z.string().min(2, "Experience level is required."),
   level: z.string().min(2, "Level is required."),
   description: z.string().optional(),
@@ -59,78 +56,66 @@ export default function AddQuestionForm() {
     level: "",
     description: "",
   });
-  const router=useRouter()
+
+  const router = useRouter();
   const params = useParams();
   const [apiError, setApiError] = useState({
     isError: false,
     message: "",
   });
+
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-    reset,
     setValue,
-    watch,
   } = useForm({
     resolver: zodResolver(formSchema),
   });
 
   const onSubmit = async (data) => {
     try {
-      // console.log("Submitted Data:", data);
-      const updatedobj=getUpdatedValues(oldData,data)
-      console.log(updatedobj)
-      await axios.patch(`/api/questions/updatequestion/${params.questionId}`,JSON.stringify(updatedobj))
-      router.back()
+      const updatedObj = getUpdatedValues(oldData, data);
+      await axios.patch(`/api/questions/updatequestion/${params.questionId}`, JSON.stringify(updatedObj));
+      router.back();
     } catch (err) {
-      console.error(err?.response?.data?.message||"Unexpected error occured");
       setApiError({
-        isError:true,
-        message:err?.response?.data?.message||"Unexpected error occured"
-      })
+        isError: true,
+        message: err?.response?.data?.message || "Unexpected error occurred",
+      });
     }
   };
 
   useEffect(() => {
     (async () => {
       try {
-        setApiError({
-          isError: false,
-          message: "",
+        setApiError({ isError: false, message: "" });
+        const res = await axios.get(`/api/questions/getquestion/${params.questionId}`);
+        const data = res.data.message;
+
+        setValue("askedIn", data.askedIn);
+        setValue("title", data.title);
+        setValue("description", data.description || "");
+        setValue("for", data.for);
+        setValue("level", data.level);
+        setValue("subject", data.subject);
+
+        setAskedIn(data.askedIn);
+        setLevel(data.level);
+        setSubject(data.subject);
+        setForWhom(data.for);
+        setOldData({
+          title: data.title,
+          askedIn: data.askedIn,
+          subject: data.subject,
+          for: data.for,
+          level: data.level,
+          description: data.description || "",
         });
-        const res = await axios.get(
-          `/api/questions/getquestion/${params.questionId}`
-        );
-        const data = res.data;
-        console.log(data.message);
-        setValue("askedIn", data.message.askedIn);
-        setValue("title", data.message.title);
-        setValue("description", data.message.description||"");
-        setValue("for", data.message.for);
-        setValue("level", data.message.level);
-        setValue("subject", data.message.subject);
-        await Promise.all([
-          setAskedIn(data.message.askedIn),
-          setLevel(data.message.level),
-          setSubject(data.message.subject),
-          setForWhom(data.message.for),
-          setOldData({
-            title: data.message.title,
-            askedIn: data.message.askedIn,
-            subject: data.message.subject,
-            for: data.message.for,
-            level: data.message.level,
-            description: data.message.description||"",
-          }),
-        ]);
       } catch (error) {
-        console.log(
-          error?.response?.data?.message || "unexpected error occured"
-        );
         setApiError({
           isError: true,
-          message: error?.response?.data?.message || "unexpected error occured",
+          message: error?.response?.data?.message || "Unexpected error occurred",
         });
       }
     })();
@@ -138,35 +123,38 @@ export default function AddQuestionForm() {
 
   return (
     <div className="w-full px-1 sm:px-6 lg:px-8 max-w-4xl mx-auto mt-1 sm:mt-6">
-      <Card className="shadow-xl border border-gray-200">
-        <CardHeader className={`w-full `}>
-          <h1 className="flex w-full  text-center items-center gap-2 text-2xl font-black text-indigo-600 tracking-tight bg-gradient-to-r from-indigo-500 via-sky-400 to-pink-400 bg-clip-text text-transparent">
+      <Card className="shadow-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900">
+        <CardHeader>
+          <h1 className="flex w-full text-center items-center gap-2 text-2xl font-black tracking-tight bg-gradient-to-r from-indigo-500 via-sky-400 to-pink-400 bg-clip-text text-transparent">
             Submit a New Interview Question
           </h1>
-          {apiError && (
-            <p className="text-red-600 text-sm font-semibold">
+          {apiError.isError && (
+            <p className="text-red-600 dark:text-red-400 text-sm font-semibold">
               {apiError.message}
             </p>
           )}
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+            {/* Question Title */}
             <div className="space-y-2">
-              <Label className="flex items-center gap-2">
+              <Label className="flex items-center gap-2 text-gray-800 dark:text-gray-200">
                 <FileText className="w-4 h-4" /> Question Title
               </Label>
               <Input
                 placeholder="What is closure in JS?"
                 {...register("title")}
+                className="bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
               />
               {errors.title && (
                 <p className="text-red-500 text-sm">{errors.title.message}</p>
               )}
             </div>
 
+            {/* Asked In + Subject */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-2 w-full">
-                <Label className="flex items-center gap-2">
+                <Label className="flex items-center gap-2 text-gray-800 dark:text-gray-200">
                   <Landmark className="w-4 h-4" /> Asked In (Company)
                 </Label>
                 <Select
@@ -176,10 +164,10 @@ export default function AddQuestionForm() {
                     setAskedIn(value);
                   }}
                 >
-                  <SelectTrigger className="w-full">
+                  <SelectTrigger className="w-full bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100">
                     <SelectValue placeholder="Select Company" />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent className="bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100">
                     {CompanyList.map((list, index) => (
                       <SelectItem
                         value={list.name.toLowerCase()}
@@ -191,13 +179,12 @@ export default function AddQuestionForm() {
                   </SelectContent>
                 </Select>
                 {errors.askedIn && (
-                  <p className="text-red-500 text-sm">
-                    {errors.askedIn.message}
-                  </p>
+                  <p className="text-red-500 text-sm">{errors.askedIn.message}</p>
                 )}
               </div>
+
               <div className="space-y-2 w-full">
-                <Label className="flex items-center gap-2">
+                <Label className="flex items-center gap-2 text-gray-800 dark:text-gray-200">
                   <Book className="w-4 h-4" /> Subject
                 </Label>
                 <Select
@@ -206,16 +193,15 @@ export default function AddQuestionForm() {
                     setValue("subject", value);
                     setSubject(value);
                   }}
-                  disabled={true}
+                  disabled
                 >
-                  <SelectTrigger className="w-full">
+                  <SelectTrigger className="w-full bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100">
                     <SelectValue placeholder="Select Subject" />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent className="bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100">
                     <SelectItem value="javascript">
                       <div className="flex items-center gap-2">
-                        <Braces className="w-4 h-4 text-yellow-500" />{" "}
-                        JavaScript
+                        <Braces className="w-4 h-4 text-yellow-500" /> JavaScript
                       </div>
                     </SelectItem>
                     <SelectItem value="reactjs">
@@ -225,8 +211,7 @@ export default function AddQuestionForm() {
                     </SelectItem>
                     <SelectItem value="nodejs">
                       <div className="flex items-center gap-2">
-                        <DatabaseZap className="w-4 h-4 text-green-600" />{" "}
-                        Node.js
+                        <DatabaseZap className="w-4 h-4 text-green-600" /> Node.js
                       </div>
                     </SelectItem>
                     <SelectItem value="sql">
@@ -242,16 +227,15 @@ export default function AddQuestionForm() {
                   </SelectContent>
                 </Select>
                 {errors.subject && (
-                  <p className="text-red-500 text-sm">
-                    {errors.subject.message}
-                  </p>
+                  <p className="text-red-500 text-sm">{errors.subject.message}</p>
                 )}
               </div>
             </div>
 
+            {/* Experience Level + Difficulty */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-2 w-full">
-                <Label className="flex items-center gap-2">
+                <Label className="flex items-center gap-2 text-gray-800 dark:text-gray-200">
                   <UserCog className="w-4 h-4" /> Experience Level
                 </Label>
                 <Select
@@ -261,10 +245,10 @@ export default function AddQuestionForm() {
                     setForWhom(value);
                   }}
                 >
-                  <SelectTrigger className="w-full">
+                  <SelectTrigger className="w-full bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100">
                     <SelectValue placeholder="Select Experience Level" />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent className="bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100">
                     <SelectItem value="fresher">Fresher</SelectItem>
                     <SelectItem value="1-3 years">1-3 years</SelectItem>
                     <SelectItem value="3+ years">3+ years</SelectItem>
@@ -276,7 +260,7 @@ export default function AddQuestionForm() {
               </div>
 
               <div className="space-y-2 w-full">
-                <Label className="flex items-center gap-2">
+                <Label className="flex items-center gap-2 text-gray-800 dark:text-gray-200">
                   <SignalHigh className="w-4 h-4" /> Difficulty Level
                 </Label>
                 <Select
@@ -286,19 +270,13 @@ export default function AddQuestionForm() {
                     setLevel(value);
                   }}
                 >
-                  <SelectTrigger className="w-full">
+                  <SelectTrigger className="w-full bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100">
                     <SelectValue placeholder="Select Difficulty" />
                   </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="easy" className={`text-green-600`}>
-                      Easy
-                    </SelectItem>
-                    <SelectItem value="medium" className={`text-orange-400`}>
-                      Medium
-                    </SelectItem>
-                    <SelectItem value="hard" className={`text-red-600`}>
-                      Hard
-                    </SelectItem>
+                  <SelectContent className="bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100">
+                    <SelectItem value="easy" className="text-green-600">Easy</SelectItem>
+                    <SelectItem value="medium" className="text-orange-400">Medium</SelectItem>
+                    <SelectItem value="hard" className="text-red-600">Hard</SelectItem>
                   </SelectContent>
                 </Select>
                 {errors.level && (
@@ -307,26 +285,26 @@ export default function AddQuestionForm() {
               </div>
             </div>
 
+            {/* Description */}
             <div className="space-y-2">
-              <Label className="flex items-center gap-2">
+              <Label className="flex items-center gap-2 text-gray-800 dark:text-gray-200">
                 <StickyNote className="w-4 h-4" /> Description (Optional)
               </Label>
               <Textarea
                 rows={7}
                 placeholder="Explain your answer or provide context..."
                 {...register("description")}
-                className={`min-h-[150px] resize-none`}
+                className="min-h-[150px] resize-none bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
               />
             </div>
 
+            {/* Submit */}
             <Button
               type="submit"
               disabled={isSubmitting}
-              className="w-full cursor-pointer bg-gradient-to-r from-indigo-500 to-pink-500 text-white "
+              className="w-full cursor-pointer bg-gradient-to-r from-indigo-500 to-pink-500 text-white hover:opacity-90"
             >
-              {isSubmitting ? (
-                <Loader2 className="w-4 h-4 animate-spin mr-2" />
-              ) : null}
+              {isSubmitting && <Loader2 className="w-4 h-4 animate-spin mr-2" />}
               Submit Question
             </Button>
           </form>

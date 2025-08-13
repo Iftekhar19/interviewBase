@@ -34,15 +34,15 @@ const sidebarLinks = [
 
 const DashboardLayout = ({ children }) => {
   const [collapsed, setCollapsed] = useState(false);
-  const [mobileOpen, setMobileOpen] = useState(false); // mobile sidebar state
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
-    <main className="h-screen w-full max-w-[1480px] bg-gradient-to-b from-indigo-50 via-white to-pink-50">
+    <main className="h-screen w-full max-w-[1480px] bg-white dark:bg-gray-900 transition-colors duration-300">
       <Navbar />
       <section className="w-full mx-auto h-[calc(100vh-70px)] flex">
         {/* Sidebar */}
         <aside
-          className={`hidden sm:flex flex-col border-r border-gray-200 transition-all duration-300 ${
+          className={`hidden sm:flex flex-col border-r border-gray-200 dark:border-gray-700 transition-all duration-300 ${
             collapsed ? "w-[60px]" : "w-[200px]"
           }`}
         >
@@ -54,9 +54,9 @@ const DashboardLayout = ({ children }) => {
               className="cursor-pointer"
             >
               {collapsed ? (
-                <PanelLeftOpen className="w-8 h-8 text-gray-500" />
+                <PanelLeftOpen className="w-8 h-8 text-gray-500 dark:text-gray-300" />
               ) : (
-                <PanelLeftClose className="w-8 h-8 text-gray-500" />
+                <PanelLeftClose className="w-8 h-8 text-gray-500 dark:text-gray-300" />
               )}
             </Button>
           </div>
@@ -65,8 +65,10 @@ const DashboardLayout = ({ children }) => {
               <Link
                 key={href}
                 href={href}
-                className={`flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium hover:bg-indigo-50 ${
-                  danger ? "text-red-500" : "text-gray-700"
+                className={`flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium hover:bg-indigo-50 dark:hover:bg-gray-700 ${
+                  danger
+                    ? "text-red-500 dark:text-red-400"
+                    : "text-gray-700 dark:text-gray-200"
                 }`}
               >
                 <Icon className="w-5 h-5" />
@@ -81,15 +83,15 @@ const DashboardLayout = ({ children }) => {
           <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
             <SheetTrigger asChild>
               <Button variant="ghost" size="icon">
-                <Menu className="w-6 h-6" />
+                <Menu className="w-6 h-6 text-gray-800 dark:text-gray-200" />
               </Button>
             </SheetTrigger>
             <SheetContent
               side="left"
-              className="w-[250px] bg-gradient-to-b from-indigo-50 via-white to-pink-50"
+              className="w-[250px] bg-gradient-to-b from-indigo-50 via-white to-pink-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900"
             >
               <SheetTitle>
-                <div className="text-lg font-bold py-5 pl-4 border-b shadow-md border-gray-200 tracking-tight bg-gradient-to-r from-indigo-500 via-sky-400 to-pink-400 bg-clip-text text-transparent">
+                <div className="text-lg font-bold py-5 pl-4 border-b border-gray-200 dark:border-gray-700 tracking-tight bg-gradient-to-r from-indigo-500 via-sky-400 to-pink-400 bg-clip-text text-transparent">
                   InterviewBase
                 </div>
               </SheetTitle>
@@ -98,9 +100,11 @@ const DashboardLayout = ({ children }) => {
                   <Link
                     key={href}
                     href={href}
-                    onClick={() => setMobileOpen(false)} // CLOSE SHEET ON CLICK
-                    className={`flex items-center gap-3 px-4 py-2 rounded-md text-base font-medium hover:bg-indigo-100 ${
-                      danger ? "text-red-500" : "text-gray-800"
+                    onClick={() => setMobileOpen(false)}
+                    className={`flex items-center gap-3 px-4 py-2 rounded-md text-base font-medium hover:bg-indigo-100 dark:hover:bg-gray-700 ${
+                      danger
+                        ? "text-red-500 dark:text-red-400"
+                        : "text-gray-800 dark:text-gray-200"
                     }`}
                   >
                     <Icon className="w-5 h-5" />
@@ -113,7 +117,9 @@ const DashboardLayout = ({ children }) => {
         </div>
 
         {/* Main Content */}
-        <div className="flex-1 p-0 sm:p-2 overflow-y-auto">{children}</div>
+        <div className="flex-1 p-0 sm:p-2 overflow-y-auto text-gray-900 dark:text-gray-100">
+          {children}
+        </div>
       </section>
     </main>
   );

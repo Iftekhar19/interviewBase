@@ -46,19 +46,22 @@ import {
 } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
+
 const levelColorObject = {
   easy: "text-green-500",
   medium: "text-orange-300",
   hard: "text-red-700",
 };
+
 const iconObject = {
-  javascript: <Braces className="w-4 h-4 text-yellow-500" />, // JavaScript icon
-  nodejs: <ServerCog className="w-4 h-4 text-green-600" />, // Node.js icon
-  reactjs: <Atom className="w-4 h-4 text-sky-500" />, // React icon
-  dsa: <BrainCircuit className="w-4 h-4 text-indigo-500" />, // DSA icon
-  sql: <DatabaseZap className="w-4 h-4 text-pink-600" />, // SQL icon
+  javascript: <Braces className="w-4 h-4 text-yellow-500" />,
+  nodejs: <ServerCog className="w-4 h-4 text-green-600" />,
+  reactjs: <Atom className="w-4 h-4 text-sky-500" />,
+  dsa: <BrainCircuit className="w-4 h-4 text-indigo-500" />,
+  sql: <DatabaseZap className="w-4 h-4 text-pink-600" />,
 };
-const page = () => {
+
+const Page = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
   const [topic, setTopic] = useState(searchParams.get("topic"));
@@ -71,14 +74,11 @@ const page = () => {
   const [modalData, setModalData] = useState(null);
   const [totalPages, setTotalPages] = useState(Math.ceil(100 / rowsPerPage));
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [loading, setLoading] = useState({
-    isFirst: true,
-    load: true,
-  });
-  const [open,setOpen]=useState(false)
-  const [title,setTitle]=useState("")
-  const [description,setDescription]=useState("")
-  
+  const [loading, setLoading] = useState({ isFirst: true, load: true });
+  const [open, setOpen] = useState(false);
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+
   const handleNext = () => {
     if (currentPage < totalPages) setCurrentPage((prev) => prev + 1);
   };
@@ -104,217 +104,203 @@ const page = () => {
     params.delete("company");
     router.replace(`/dashboard?${params.toString()}`);
   }, []);
+
   useEffect(() => {
     if (topic !== searchParams.get("topic")) {
       setTopic(searchParams.get("topic"));
     }
   }, [searchParams.get("topic")]);
+
   useEffect(() => {
     (async () => {
       try {
-        setLoading((old) => {
-          return {
-            ...old,
-            load: true,
-            isFirst: old.isFirst ? true : false,
-          };
-        });
+        setLoading((old) => ({ ...old, load: true, isFirst: old.isFirst }));
         const res = await axios.get(
           `/api/questions/getquestions?topic=${topic}&page=${currentPage}&pageSize=${rowsPerPage}&level=${
             level || ""
           }&for=${forWhom || ""}&company=${company || ""}`
         );
-        console.log(res.data);
-        const { totalPages: tP, questions, total } = res.data.message;
+        const { totalPages: tP, questions } = res.data.message;
         setTotalPages(tP);
         setData(questions);
       } catch (error) {
         console.log(error);
-        console.log(error?.response?.data || "Unexpected error from server");
       } finally {
-        setLoading({
-          isFirst: false,
-          load: false,
-        });
+        setLoading({ isFirst: false, load: false });
       }
     })();
   }, [topic, rowsPerPage, currentPage, level, company, forWhom]);
 
-  const handleOpen=async({title,description})=>
-  {
+  const handleOpen = async ({ title, description }) => {
     setTitle(title);
-    setDescription(description)
-    setOpen(true)
-  }
+    setDescription(description);
+    setOpen(true);
+  };
+
   return (
-    <div className="w-full ">
+    <div className="w-full">
       {loading.isFirst ? (
-        <>
-          <FilterSkeleton />
-        </>
-      ) :  (
-        <div className="flex items-center justify-between bg-[#ffffffaf] p-2 shadow-sm rounded-sm ">
-          <h1 className="text-md font-semibold  capitalize">{topic}</h1>
-          <div className="md:hidden  block">
-            <FilterMob
-              setCompany={setCompany}
-              setLevel={setLevel}
-              setForWhom={setForWhom}
-            />
-          </div>
-          {/* Filter bar */}
-          <div className="hidden md:block">
-            <FilterDesk
-              setCompany={setCompany}
-              setLevel={setLevel}
-              setForWhom={setForWhom}
-            />
-          </div>
-        </div>
-      )}
-      {loading.load ? (
-        <>
-          <TableSkeleton />
-        </>
+        <FilterSkeleton />
       ) : (
-        <div className=" h-full pt-2">
-           {
-            (loading.load==false && data.length==0) ? <NoData/>:
-         
-          <Card className="overflow-x-auto rounded-lg shadow-sm bg-[#ffffff63]">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead className="min-w-[200px]">Title</TableHead>
-                  <TableHead className="min-w-[150px]">Company</TableHead>
-                  <TableHead className="min-w-[120px]">Subject</TableHead>
-                  <TableHead className="min-w-[100px]">Experience</TableHead>
-                  <TableHead className="min-w-[80px]">Level</TableHead>
-                  <TableHead className="min-w-[250px]">Description</TableHead>
-                  <TableHead className="text-center">Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-             <TableBody>
-                {data.map((item, idx) => (
-                  <TableRow key={idx}>
-                    <TableCell>
-                      {item.title.charAt(0).toUpperCase() +
-                        item.title.slice(1, 50)}
-                      {item.title.length > 50 && "..."}
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex items-center gap-2">
-                        <Building2 className="w-4 h-4 text-muted-foreground" />
-                        <span className="capitalize">{item.askedIn}</span>
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex items-center gap-2">
-                        {iconObject[item.subject.toLowerCase()] || (
-                          <BookOpen className="w-4 h-4 text-muted-foreground" />
-                        )}
-                        <span className="capitalize">{item.subject}</span>
-                      </div>
-                    </TableCell>
-                    <TableCell className={"capitalize"}>{item.for}</TableCell>
-                    <TableCell
-                      className={`${
-                        levelColorObject[item?.level?.toLowerCase()]
-                      } capitalize`}
-                    >
-                      {item.level}
-                    </TableCell>
-                    <TableCell>{item.description || "NA"}</TableCell>
-                    <TableCell className="flex justify-end gap-2">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => openModal(item)}
-                        className={"cursor-pointer"}
-                      >
-                        <Eye className="w-4 h-4" />
-                      </Button>
-                      <Button
-                        variant=""
-                        className={"cursor-pointer "}
-                        size="sm"
-                        onClick={()=>handleOpen({title:item.title,description:item.description})}
-                      >
-                        <GemIcon className="w-4 h-4" />
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </Card>
-          }
-
-       { (loading.load==false && data.length!=0) &&<> 
-       <div className="flex flex-wrap justify-between items-center mt-3 gap-4 pb-3">
-            <div className="flex items-center gap-2">
-              <span className="text-sm font-medium">Rows per page:</span>
-              <Select
-                value={rowsPerPage.toString()}
-                onValueChange={(val) => {
-                  setRowsPerPage(Number(val));
-                  setCurrentPage(1);
-                }}
-              >
-                <SelectTrigger className="w-[100px] cursor-pointer">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {[20, 40, 60, 80, 100].map((val) => (
-                    <SelectItem key={val} value={val.toString()}>
-                      {val}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div className="ml-auto">
-              <Pagination>
-                <PaginationContent>
-                  <PaginationItem>
-                    <PaginationPrevious
-                      onClick={handlePrevious}
-                      className={
-                        currentPage === 1
-                          ? "pointer-events-none opacity-50"
-                          : "cursor-pointer"
-                      }
-                    />
-                  </PaginationItem>
-                  <PaginationItem>
-                    <span className="text-sm">
-                      Page {currentPage} of {totalPages}
-                    </span>
-                  </PaginationItem>
-                  <PaginationItem>
-                    <PaginationNext
-                      onClick={handleNext}
-                      className={
-                        currentPage === totalPages
-                          ? "pointer-events-none opacity-50"
-                          : "cursor-pointer"
-                      }
-                    />
-                  </PaginationItem>
-                </PaginationContent>
-              </Pagination>
-            </div>
+        <div className="flex items-center justify-between bg-white dark:bg-gray-800 p-2 shadow-sm rounded-sm">
+          <h1 className="text-md font-semibold capitalize text-gray-800 dark:text-gray-100">
+            {topic}
+          </h1>
+          <div className="md:hidden block">
+            <FilterMob setCompany={setCompany} setLevel={setLevel} setForWhom={setForWhom} />
           </div>
-
-          <QuestionViewModal
-            data={modalData}
-            open={isModalOpen}
-            onClose={closeModal}
-          /></>}
+          <div className="hidden md:block">
+            <FilterDesk setCompany={setCompany} setLevel={setLevel} setForWhom={setForWhom} />
+          </div>
         </div>
       )}
-         <AnswerModal
+
+      {loading.load ? (
+        <TableSkeleton />
+      ) : (
+        <div className="h-full pt-2">
+          {data.length === 0 ? (
+            <NoData />
+          ) : (
+            <Card className="overflow-x-auto rounded-lg shadow-sm bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    {["Title", "Company", "Subject", "Experience", "Level", "Description", "Actions"].map(
+                      (head, idx) => (
+                        <TableHead key={idx} className="text-gray-700 dark:text-gray-200">
+                          {head}
+                        </TableHead>
+                      )
+                    )}
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {data.map((item, idx) => (
+                    <TableRow
+                      key={idx}
+                      className="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                    >
+                      <TableCell className="text-gray-800 dark:text-gray-100">
+                        {item.title.charAt(0).toUpperCase() + item.title.slice(1, 50)}
+                        {item.title.length > 50 && "..."}
+                      </TableCell>
+                      <TableCell className="text-gray-700 dark:text-gray-300">
+                        <div className="flex items-center gap-2">
+                          <Building2 className="w-4 h-4 text-gray-500 dark:text-gray-400" />
+                          <span className="capitalize">{item.askedIn}</span>
+                        </div>
+                      </TableCell>
+                      <TableCell className="text-gray-700 dark:text-gray-300">
+                        <div className="flex items-center gap-2">
+                          {iconObject[item.subject.toLowerCase()] || (
+                            <BookOpen className="w-4 h-4 text-gray-500 dark:text-gray-400" />
+                          )}
+                          <span className="capitalize">{item.subject}</span>
+                        </div>
+                      </TableCell>
+                      <TableCell className="capitalize text-gray-700 dark:text-gray-300">
+                        {item.for}
+                      </TableCell>
+                      <TableCell
+                        className={`${levelColorObject[item?.level?.toLowerCase()] || ""} capitalize`}
+                      >
+                        {item.level}
+                      </TableCell>
+                      <TableCell className="text-gray-700 dark:text-gray-300">
+                        {item.description || "NA"}
+                      </TableCell>
+                      <TableCell className="flex justify-end gap-2">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => openModal(item)}
+                          className="cursor-pointer text-gray-700 dark:text-gray-200 border-gray-300 dark:border-gray-600"
+                        >
+                          <Eye className="w-4 h-4" />
+                        </Button>
+                        <Button
+                          size="sm"
+                          onClick={() => handleOpen({ title: item.title, description: item.description })}
+                          className="cursor-pointer text-gray-700 dark:text-gray-200 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600"
+                        >
+                          <GemIcon className="w-4 h-4" />
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </Card>
+          )}
+
+          {data.length > 0 && (
+            <>
+              <div className="flex flex-wrap justify-between items-center mt-3 gap-4 pb-3">
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                    Rows per page:
+                  </span>
+                  <Select
+                    value={rowsPerPage.toString()}
+                    onValueChange={(val) => {
+                      setRowsPerPage(Number(val));
+                      setCurrentPage(1);
+                    }}
+                  >
+                    <SelectTrigger className="w-[100px] cursor-pointer bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent className="bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200">
+                      {[20, 40, 60, 80, 100].map((val) => (
+                        <SelectItem key={val} value={val.toString()}>
+                          {val}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="ml-auto">
+                  <Pagination>
+                    <PaginationContent>
+                      <PaginationItem>
+                        <PaginationPrevious
+                          onClick={handlePrevious}
+                          className={
+                            currentPage === 1
+                              ? "pointer-events-none opacity-50"
+                              : "cursor-pointer text-gray-700 dark:text-gray-200"
+                          }
+                        />
+                      </PaginationItem>
+                      <PaginationItem>
+                        <span className="text-sm text-gray-700 dark:text-gray-300">
+                          Page {currentPage} of {totalPages}
+                        </span>
+                      </PaginationItem>
+                      <PaginationItem>
+                        <PaginationNext
+                          onClick={handleNext}
+                          className={
+                            currentPage === totalPages
+                              ? "pointer-events-none opacity-50"
+                              : "cursor-pointer text-gray-700 dark:text-gray-200"
+                          }
+                        />
+                      </PaginationItem>
+                    </PaginationContent>
+                  </Pagination>
+                </div>
+              </div>
+
+              <QuestionViewModal data={modalData} open={isModalOpen} onClose={closeModal} />
+            </>
+          )}
+        </div>
+      )}
+
+      <AnswerModal
         isOpen={open}
         onClose={() => setOpen(false)}
         title={title}
@@ -324,4 +310,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

@@ -33,17 +33,6 @@ import { AddQuestionSchema } from "@/formValidationSchemas/addquestionSchema";
 import { useState } from "react";
 import axios from "axios";
 
-const formSchema = z.object({
-  title: z
-    .string()
-    .min(5, "Title is required and must be at least 5 characters."),
-  askedIn: z.string().min(2, "Company name is required."),
-  subject: z.string().min(2, "Subject is required."),
-  for: z.string().min(2, "Experience level is required."),
-  level: z.string().min(2, "Level is required."),
-  description: z.string().optional(),
-});
-
 export default function AddQuestionForm() {
   const [askedIn, setAskedIn] = useState("");
   const [subject, setSubject] = useState("");
@@ -59,18 +48,13 @@ export default function AddQuestionForm() {
     formState: { errors, isSubmitting },
     reset,
     setValue,
-    watch,
   } = useForm({
     resolver: zodResolver(AddQuestionSchema),
   });
 
   const onSubmit = async (data) => {
-    // console.log("Submitted Data:", data);
     try {
-      setApiError({
-        isError: false,
-        message: "",
-      });
+      setApiError({ isError: false, message: "" });
       await axios.post(`/api/questions/addquestion`, JSON.stringify(data));
       reset();
       setAskedIn("");
@@ -80,30 +64,33 @@ export default function AddQuestionForm() {
     } catch (err) {
       setApiError({
         isError: true,
-        message: err?.response?.data?.message || "Unexpected error occured",
+        message: err?.response?.data?.message || "Unexpected error occurred",
       });
-      console.log(err?.response?.data?.message || "Unexpected error occured");
     }
   };
 
   return (
     <div className="w-full px-1 sm:px-6 lg:px-8 max-w-4xl mx-auto mt-1 sm:mt-6">
-      <Card className="shadow-xl  border border-gray-200">
-        <CardHeader className={`w-full `}>
-          <h1 className="flex w-full  text-center items-center justify-center gap-2 text-2xl font-black text-indigo-600 tracking-tight bg-gradient-to-r from-indigo-500 via-sky-400 to-pink-400 bg-clip-text text-transparent">
+      <Card className="shadow-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900">
+        <CardHeader className="w-full">
+          <h1 className="flex w-full text-center items-center justify-center gap-2 text-2xl font-black tracking-tight bg-gradient-to-r from-indigo-500 via-sky-400 to-pink-400 bg-clip-text text-transparent">
             Submit a New Interview Question
           </h1>
-          {
-            apiError.isError && <p className="text-red-600 text-sm font-semibold text-center">{apiError.message}</p>
-          }
+          {apiError.isError && (
+            <p className="text-red-600 dark:text-red-400 text-sm font-semibold text-center">
+              {apiError.message}
+            </p>
+          )}
         </CardHeader>
-        <CardContent className={'p-2 sm:p-6'}>
+        <CardContent className="p-2 sm:p-6">
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+            {/* Question Title */}
             <div className="space-y-2">
-              <Label className="flex items-center gap-2">
+              <Label className="flex items-center gap-2 text-gray-700 dark:text-gray-300">
                 <FileText className="w-4 h-4" /> Question Title
               </Label>
               <Input
+                className="dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100"
                 placeholder="What is closure in JS?"
                 {...register("title")}
               />
@@ -112,9 +99,10 @@ export default function AddQuestionForm() {
               )}
             </div>
 
+            {/* Asked In & Subject */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-2 w-full">
-                <Label className="flex items-center gap-2">
+                <Label className="flex items-center gap-2 text-gray-700 dark:text-gray-300">
                   <Landmark className="w-4 h-4" /> Asked In (Company)
                 </Label>
                 <Select
@@ -124,10 +112,10 @@ export default function AddQuestionForm() {
                     setAskedIn(value);
                   }}
                 >
-                  <SelectTrigger className="w-full">
+                  <SelectTrigger className="w-full dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100">
                     <SelectValue placeholder="Select Company" />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent className="dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100">
                     {CompanyList.map((list, index) => (
                       <SelectItem value={list.name} key={list.name + index}>
                         {list.name}
@@ -141,8 +129,9 @@ export default function AddQuestionForm() {
                   </p>
                 )}
               </div>
+
               <div className="space-y-2 w-full">
-                <Label className="flex items-center gap-2">
+                <Label className="flex items-center gap-2 text-gray-700 dark:text-gray-300">
                   <Book className="w-4 h-4" /> Subject
                 </Label>
                 <Select
@@ -152,14 +141,13 @@ export default function AddQuestionForm() {
                     setSubject(value);
                   }}
                 >
-                  <SelectTrigger className="w-full">
+                  <SelectTrigger className="w-full dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100">
                     <SelectValue placeholder="Select Subject" />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent className="dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100">
                     <SelectItem value="JavaScript">
                       <div className="flex items-center gap-2">
-                        <Braces className="w-4 h-4 text-yellow-500" />{" "}
-                        JavaScript
+                        <Braces className="w-4 h-4 text-yellow-500" /> JavaScript
                       </div>
                     </SelectItem>
                     <SelectItem value="reactjs">
@@ -169,8 +157,7 @@ export default function AddQuestionForm() {
                     </SelectItem>
                     <SelectItem value="nodejs">
                       <div className="flex items-center gap-2">
-                        <DatabaseZap className="w-4 h-4 text-green-600" />{" "}
-                        Node.js
+                        <DatabaseZap className="w-4 h-4 text-green-600" /> Node.js
                       </div>
                     </SelectItem>
                     <SelectItem value="SQL">
@@ -193,9 +180,10 @@ export default function AddQuestionForm() {
               </div>
             </div>
 
+            {/* Experience Level & Difficulty */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-2 w-full">
-                <Label className="flex items-center gap-2">
+                <Label className="flex items-center gap-2 text-gray-700 dark:text-gray-300">
                   <UserCog className="w-4 h-4" /> Experience Level
                 </Label>
                 <Select
@@ -205,10 +193,10 @@ export default function AddQuestionForm() {
                     setForwhom(value);
                   }}
                 >
-                  <SelectTrigger className="w-full">
+                  <SelectTrigger className="w-full dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100">
                     <SelectValue placeholder="Select Experience Level" />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent className="dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100">
                     <SelectItem value="Fresher">Fresher</SelectItem>
                     <SelectItem value="1-3 years">1-3 years</SelectItem>
                     <SelectItem value="3+ years">3+ years</SelectItem>
@@ -220,7 +208,7 @@ export default function AddQuestionForm() {
               </div>
 
               <div className="space-y-2 w-full">
-                <Label className="flex items-center gap-2">
+                <Label className="flex items-center gap-2 text-gray-700 dark:text-gray-300">
                   <SignalHigh className="w-4 h-4" /> Difficulty Level
                 </Label>
                 <Select
@@ -230,17 +218,17 @@ export default function AddQuestionForm() {
                     setLevel(value);
                   }}
                 >
-                  <SelectTrigger className="w-full">
+                  <SelectTrigger className="w-full dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100">
                     <SelectValue placeholder="Select Difficulty" />
                   </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="Easy" className={`text-green-600`}>
+                  <SelectContent className="dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100">
+                    <SelectItem value="Easy" className="text-green-600">
                       Easy
                     </SelectItem>
-                    <SelectItem value="Medium" className={`text-orange-400`}>
+                    <SelectItem value="Medium" className="text-orange-400">
                       Medium
                     </SelectItem>
-                    <SelectItem value="Hard" className={`text-red-600`}>
+                    <SelectItem value="Hard" className="text-red-600">
                       Hard
                     </SelectItem>
                   </SelectContent>
@@ -251,26 +239,28 @@ export default function AddQuestionForm() {
               </div>
             </div>
 
+            {/* Description */}
             <div className="space-y-2">
-              <Label className="flex items-center gap-2">
+              <Label className="flex items-center gap-2 text-gray-700 dark:text-gray-300">
                 <StickyNote className="w-4 h-4" /> Description (Optional)
               </Label>
               <Textarea
                 rows={7}
                 placeholder="Explain your answer or provide context..."
                 {...register("description")}
-                className={`min-h-[150px] resize-none`}
+                className="min-h-[150px] resize-none dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100"
               />
             </div>
 
+            {/* Submit Button */}
             <Button
               type="submit"
               disabled={isSubmitting}
-              className="w-full cursor-pointer bg-gradient-to-r from-indigo-500 to-pink-500 text-white "
+              className="w-full cursor-pointer bg-gradient-to-r from-indigo-500 to-pink-500 text-white"
             >
-              {isSubmitting ? (
+              {isSubmitting && (
                 <Loader2 className="w-4 h-4 animate-spin mr-2" />
-              ) : null}
+              )}
               Submit Question
             </Button>
           </form>

@@ -1,21 +1,21 @@
 import React, { useState } from "react";
 import ReactMarkdown from "react-markdown";
-
 import { Clipboard, Check } from "lucide-react";
 
 export default function MarkdownRenderer({ content }) {
   return (
-    <div className="prose prose-sm sm:prose-base max-w-none text-gray-900 dark:text-gray-100  pl-2">
+    <div className="prose prose-sm sm:prose-base max-w-none text-gray-900 dark:text-gray-100 pl-2">
       <ReactMarkdown
         components={{
           code({ inline, children, ...props }) {
             const codeText = String(children).trim();
 
-            const isFakeBlock = !inline && codeText.length < 30 && !codeText.includes("\n");
+            const isFakeBlock =
+              !inline && codeText.length < 30 && !codeText.includes("\n");
 
             if (inline || isFakeBlock) {
               return (
-                <code className="text-sm text-gray-800 font-mono">
+                <code className="text-sm font-mono text-gray-800 dark:text-gray-200 bg-gray-100 dark:bg-gray-800 px-1 py-0.5 rounded">
                   {codeText}
                 </code>
               );
@@ -45,12 +45,12 @@ function CodeBlock({ children }) {
     <div className="relative my-4 group">
       <button
         onClick={copyToClipboard}
-        className="absolute top-2 right-2 bg-white text-gray-700 border border-gray-300 rounded p-1 hover:bg-gray-100 transition opacity-0 group-hover:opacity-100"
+        className="absolute top-2 right-2 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded p-1 hover:bg-gray-100 dark:hover:bg-gray-700 transition opacity-0 group-hover:opacity-100"
         title="Copy code"
       >
         {copied ? <Check size={16} /> : <Clipboard size={16} />}
       </button>
-      <pre className="bg-[#0d1117] text-gray-100 p-4 rounded-md text-sm font-mono whitespace-pre-wrap overflow-x-auto">
+      <pre className="bg-gray-900 dark:bg-[#0d1117] text-gray-100 dark:text-gray-200 p-4 rounded-md text-sm font-mono whitespace-pre-wrap overflow-x-auto">
         <code>{children}</code>
       </pre>
     </div>

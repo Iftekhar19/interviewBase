@@ -9,18 +9,26 @@ import TestimonialsSection from "@/components/Testimonials";
 import { useAuth } from "@/context/AuthProvider";
 
 export default function Home() {
-  const {user,loading}=useAuth();
-  console.log(user)
-  return <div className="h-[100dvh] flex flex-col">
-    <Navbar/>
-    <main className="flex-1 overflow-y-auto bg-gradient-to-b  from-gray-50 via-white to-pink-50">
-      <Hero/>
-      <Features/>
-      <TestimonialsSection/>
-      <CallToActionSection/>
-      <StatsSection/>
-      <Footer/>
-    </main>
-    {/* hello */}
-  </div>
+  const { user, loading } = useAuth();
+  console.log(user);
+
+  return (
+    <div className="h-[100dvh] flex flex-col bg-white dark:bg-gray-900 transition-colors duration-300">
+      <Navbar />
+      <main
+        className="
+          flex-1 overflow-y-auto 
+        bg-white dark:bg-gray-950
+          transition-colors duration-300
+        "
+      >
+        <Hero />
+        <Features />
+        <TestimonialsSection />
+        <CallToActionSection />
+        <StatsSection />
+        <Footer />
+      </main>
+    </div>
+  );
 }
