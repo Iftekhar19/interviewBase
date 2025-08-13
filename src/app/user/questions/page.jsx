@@ -236,7 +236,7 @@ export default function TopicQuestionsPage() {
                   setCurrentPage(1);
                 }}
               >
-                <SelectTrigger className="w-[100px] cursor-pointer dark:border-gray-600">
+                <SelectTrigger className="max-w-[100px] cursor-pointer dark:border-gray-600">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>

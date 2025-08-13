@@ -248,7 +248,7 @@ const Page = () => {
                       setCurrentPage(1);
                     }}
                   >
-                    <SelectTrigger className="w-[100px] cursor-pointer bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200">
+                    <SelectTrigger className="max-w-[100px] cursor-pointer bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent className="bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200">

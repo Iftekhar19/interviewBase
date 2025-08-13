@@ -26,9 +26,7 @@ export default function Hero() {
           transition={{ duration: 1, type: "spring" }}
         >
           Master{" "}
-          <span className="px-3 py-1 bg-gradient-to-r from-yellow-400 via-pink-500 to-pink-600 
-            dark:from-yellow-300 dark:via-pink-400 dark:to-pink-500 
-            rounded-full text-white">
+          <span className="px-3 py-1  text-white">
             Interviews
           </span>
           <br className="hidden md:block" />

@@ -28,6 +28,7 @@ import {
   Atom,
   DatabaseZap,
   BrainCircuit,
+  ShieldCheckIcon,
 } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -56,6 +57,7 @@ export default function AddQuestionForm() {
     level: "",
     description: "",
   });
+   const [success,setSuccess]=useState(false)
 
   const router = useRouter();
   const params = useParams();
@@ -72,12 +74,20 @@ export default function AddQuestionForm() {
   } = useForm({
     resolver: zodResolver(formSchema),
   });
+   const removeSuccess=()=>{
+    setTimeout(()=>
+    {
+      setSuccess(false);
+      router.back();
+    },2000)
+  }
 
   const onSubmit = async (data) => {
     try {
       const updatedObj = getUpdatedValues(oldData, data);
       await axios.patch(`/api/questions/updatequestion/${params.questionId}`, JSON.stringify(updatedObj));
-      router.back();
+      setSuccess(true)
+      removeSuccess()
     } catch (err) {
       setApiError({
         isError: true,
@@ -133,6 +143,12 @@ export default function AddQuestionForm() {
               {apiError.message}
             </p>
           )}
+              {
+            success && <div className="w-full flex  items-center justify-center">
+              <ShieldCheckIcon className="h-10 w-10 text-green-500"/>
+              <p className="text-green-500">Question updated successfully</p>
+            </div>
+          }
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">

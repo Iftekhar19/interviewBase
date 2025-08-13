@@ -47,7 +47,7 @@ export default function Navbar() {
 
   return (
     <header className="w-full backdrop-blur bg-white dark:bg-gray-950 border-b border-gray-100 dark:border-gray-800 shadow-md sticky top-0 z-50 transition-all">
-      <div className="max-w-[1420px] mx-auto px-4 py-4 flex justify-between items-center">
+      <div className="max-w-[1420px] mx-auto px-4 py-2 md:py-4 flex justify-between items-center">
         {/* Logo */}
         <Link
           href="/"

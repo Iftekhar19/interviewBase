@@ -26,9 +26,9 @@ import {
   Atom,
   DatabaseZap,
   BrainCircuit,
+  ShieldCheckIcon,
 } from "lucide-react";
 import { useForm } from "react-hook-form";
-import * as z from "zod";
 import { AddQuestionSchema } from "@/formValidationSchemas/addquestionSchema";
 import { useState } from "react";
 import axios from "axios";
@@ -42,6 +42,7 @@ export default function AddQuestionForm() {
     isError: false,
     message: "",
   });
+  const [success,setSuccess]=useState(false)
   const {
     register,
     handleSubmit,
@@ -51,11 +52,18 @@ export default function AddQuestionForm() {
   } = useForm({
     resolver: zodResolver(AddQuestionSchema),
   });
-
+  const removeSuccess=()=>{
+    setTimeout(()=>
+    {
+      setSuccess(false)
+    },2000)
+  }
   const onSubmit = async (data) => {
     try {
       setApiError({ isError: false, message: "" });
       await axios.post(`/api/questions/addquestion`, JSON.stringify(data));
+      setSuccess(true)
+      removeSuccess()
       reset();
       setAskedIn("");
       setSubject("");
@@ -73,7 +81,7 @@ export default function AddQuestionForm() {
     <div className="w-full px-1 sm:px-6 lg:px-8 max-w-4xl mx-auto mt-1 sm:mt-6">
       <Card className="shadow-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900">
         <CardHeader className="w-full">
-          <h1 className="flex w-full text-center items-center justify-center gap-2 text-2xl font-black tracking-tight bg-gradient-to-r from-indigo-500 via-sky-400 to-pink-400 bg-clip-text text-transparent">
+          <h1 className="flex w-full text-center items-center justify-center gap-2 text-2xl font-black tracking-tight text-indigo-600">
             Submit a New Interview Question
           </h1>
           {apiError.isError && (
@@ -81,6 +89,12 @@ export default function AddQuestionForm() {
               {apiError.message}
             </p>
           )}
+          {
+            success && <div className="w-full flex  items-center justify-center">
+              <ShieldCheckIcon className="h-10 w-10 text-green-500"/>
+              <p className="text-green-500">Question addedd successfully</p>
+            </div>
+          }
         </CardHeader>
         <CardContent className="p-2 sm:p-6">
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
