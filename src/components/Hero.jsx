@@ -4,7 +4,7 @@ import { Atom, Database, Braces } from "lucide-react";
 
 export default function Hero() {
   return (
-    <section className="relative  h-full flex flex-col justify-center items-center overflow-hidden">
+    <section className="relative  min-h-full flex flex-col justify-center items-center overflow-hidden">
       {/* Background Blur Accent */}
       <div className="absolute -top-20 -left-20 w-[600px] h-[600px] bg-indigo-300/20 dark:bg-indigo-500/20 rounded-full blur-3xl -z-10" />
       <div className="absolute bottom-0 right-0 w-[400px] h-[400px] bg-pink-300/30 dark:bg-pink-500/30 rounded-full blur-2xl -z-10" />
