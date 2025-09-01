@@ -29,9 +29,13 @@ export function AuthProvider({ children }) {
           const data = await response.json();
           setUser(data.message);
         } else {
+           const res=  await fetch('/api/users/logout')
+           console.log(res)
           setUser(null);
         }
       } catch (error) {
+        console.log(error)
+     
         setUser(null);
       } finally {
         setLoading(false);
